@@ -7,11 +7,7 @@ program test
         formula=((3./2.)*i**2.)+(5./2.)*i+1.
         write(*,"(I7,I7,5X,F7.2)")i,Rel,formula
     end do
-
-
-
 CONTAINS
-
     recursive function f(x) result(t)
         integer ,intent(in) :: x
         integer ::t

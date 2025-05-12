@@ -4,7 +4,7 @@ program combination_permutation
     integer :: resultP, resultC
 
     ! Calculate and print permutations (10P6)
-    print *, '10P6 = ', factorial(10) / factorial(10 - 6)
+    print *, '10P6 = ', factorial(10) / factorial(10-6)
 
     ! Calculate and print combination (10C4)
     print *, '10C4 = ', factorial(10) / (factorial(4) * factorial(10 - 4))
@@ -26,3 +26,5 @@ contains
         end if
     end function factorial
 end program combination_permutation
+
+
