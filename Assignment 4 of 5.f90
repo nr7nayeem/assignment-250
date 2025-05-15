@@ -1,44 +1,57 @@
-program assignment_5_romberg_NR7
+program print_8bit_binary_filtered
     implicit none
-    real,parameter :: a=0.,b=1.,tolerance=0.000005
-    real :: x,h,RT(7,7),s,exact
-    integer :: n, i ,J,k
-    do k = 1,7
-        n = 2**(k-1)
-        s=0.
-        h=(b-a)/n
-        do i=1,n-1
-            x=a+h*real(i)
-            s=s+f(x)
+    integer :: n, i
+    character(len=8) :: bin
+    logical :: is_valid
+    print *, 'Valid 8-bit Binary Strings (Ascending Order):'
+    print *, 'Decimal   Binary'
+    print *, '-------   --------'
+
+    ! Ascending Order
+    do n = 1, 256
+        bin = '00000000'   ! Initialize with all '0's (fixed length 8 characters)
+
+        ! Build the binary string
+        do i = 8, 1, -1
+            if (btest(n, i)) then
+                bin(i:i) = '1'   ! Set the corresponding position to '1'
+            else
+                bin(i:i) = '0'   ! Set the corresponding position to '0'
+            end if
         end do
-        RT(k,1)=(h/2.)*(f(a)+2.*s+f(b))
+
+        ! Filter out strings containing "101" or "100"
+        is_valid = index(bin, '101') == 0 .and. index(bin, '100') == 0
+
+        if (is_valid) then
+            write(*,'(I3, 3X, A)') n, bin
+        end if
     end do
 
-    do j=2,7
-        do i=1,8-j
-            RT(i,j)=RT(i+1,j-1)+((RT(i+1,j-1)-RT(i,j-1))/(4.0**(j-1)-1.0))
-        end do
-         if (abs(RT(1,j) - RT(1,j-1)) < tolerance)exit
-    end do
 
-    do i = 1,6
-        do j = 1,7-i
-            write(*, "(F15.6)",advance="no") RT(i, j)!                       NR7
+    print *, 'Valid 8-bit Binary Strings (descending Order):'
+    print *, 'Decimal   Binary'
+    print *, '-------   --------'
+
+    ! descending Order
+    do n = 256,1,-1
+        bin = '00000000'   ! Initialize with all '0's (fixed length 8 characters)
+
+        ! Build the binary string
+        do i = 8, 1, -1
+            if (btest(n, i)) then
+                bin(i:i) = '1'   ! Set the corresponding position to '1'
+            else
+                bin(i:i) = '0'   ! Set the corresponding position to '0'
+            end if
         end do
-            write(*,*)
+
+        ! Filter out strings containing "101" or "100"
+        is_valid = index(bin, '101') == 0 .and. index(bin, '100') == 0
+
+        if (is_valid) then
+            write(*,'(I3, 3X, A)') n, bin
+        end if
     end do
-    exact=Sf(1.)-Sf(0.)
-    write(*,*)"root is : ", RT(1,k)
-    write(*,*)"exact value : " ,exact
-    Write(*,*)"compare the result : error is = ", abs(RT(1,k)-exact)
-CONTAINS
-real function f(x)
-real,intent(in) :: x
-f= 1/(1+x**2)
-end function
-real function Sf(x)
-real,intent(in) :: x
-Sf= atan(x)
-end function
 end program
-! stay with NR7
+
