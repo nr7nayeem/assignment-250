@@ -1,46 +1,34 @@
-program mersenne_primes
+program prac
     implicit none
-    integer, parameter :: ik = selected_int_kind(18)
-    integer(ik) :: n, m
-    logical :: is_prime
+    integer,parameter ::k = selected_int_kind(30)
+    integer(k)::M,n
 
-    print *, "Mersenne Number Classification (M_n = 2^n - 1):"
-    print *, "----------------------------------------------"
 
-    do n = 0, 69
-        m = 2_ik**n - 1_ik
-        if (isMersennePrime(m)) then
-            print *, "M(", n, ") =", m, " --> Prime"
+    do n= 0,69
+        M=2_k**n-1_k
+        if(cp(M))then
+            write(*,"(I3,3x,I19,2A)")n ,M," ->" ,"prime"
+            print*,"-------------------------------------"
         else
-            print *, "M(", n, ") =", m, " --> Not Prime"
+            write(*,"(I3,3x,I19,2A)")n ,M," ->" , "not prime "
+            print*,"-------------------------------------"
         end if
     end do
-
-contains
-
-    logical function isMersennePrime(x)
-        integer(ik), intent(in) :: x
-        integer(ik) :: i
-        real(8) :: root
-
-        if (x <= 1) then
-            isMersennePrime = .false.
+    contains
+    logical function cp(x)
+    integer(k),intent(in)::x
+    integer::i
+    if(x<1)then
+        cp=.false.
+        return
+    end if
+    do i=2,int(sqrt(real(x)))
+        if (mod(x,i)==0)then
+            cp=.false.
             return
         end if
-
-        if (mod(x, 2) == 0) then
-            isMersennePrime = .false.
-            return
-        end if
-
-        root = sqrt(real(x, kind=8))
-        do i = 3, int(root), 2
-            if (mod(x, i) == 0) then
-                isMersennePrime = .false.
-                return
-            end if
-        end do
-
-        isMersennePrime = .true.
-    end function isMersennePrime
+    end do
+    cp=.true.
+    end function
+end program
 
