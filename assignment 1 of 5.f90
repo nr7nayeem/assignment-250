@@ -1,45 +1,46 @@
-program assignment_1
+program mersenne_primes
     implicit none
-    real(8) :: M
-    integer :: n
+    integer, parameter :: ik = selected_int_kind(18)
+    integer(ik) :: n, m
     logical :: is_prime
 
-    print*, "******** The 1st 70 Mersenne numbers are below ********"
-    write(*, "(A10, 10x, A15,7x,A11)") "Number", "Mersenne Numbers","check prime"
-     write(*,*) "-------------------------------------------------------"
+    print *, "Mersenne Number Classification (M_n = 2^n - 1):"
+    print *, "----------------------------------------------"
 
-    do n = 0, 70
-        M = 2.0**n - 1.0
-        is_prime = check_prime(M)
-        write(*,*) "-------------------------------------------------------"
-
-        ! Print Mersenne numbers and check if prime
-        if (is_prime) then
-            write(*, "(I7, 15x, Es10.3, 10x, A)") n, M, "Prime"
+    do n = 0, 69
+        m = 2_ik**n - 1_ik
+        if (isMersennePrime(m)) then
+            print *, "M(", n, ") =", m, " --> Prime"
         else
-            write(*, "(I7, 15x, Es10.3, 10x, A)") n, M, "Not Prime"
+            print *, "M(", n, ") =", m, " --> Not Prime"
         end if
     end do
 
 contains
 
-    logical function check_prime(num)
-        real(8), intent(in) :: num
-        integer :: i
-        check_prime = .true.
+    logical function isMersennePrime(x)
+        integer(ik), intent(in) :: x
+        integer(ik) :: i
+        real(8) :: root
 
-        if (num <= 1) then
-            check_prime = .false.
+        if (x <= 1) then
+            isMersennePrime = .false.
             return
         end if
 
-        do i = 2, int(sqrt(num))
-            if (mod(num, real(i)) == 0) then
-                check_prime = .false.
+        if (mod(x, 2) == 0) then
+            isMersennePrime = .false.
+            return
+        end if
+
+        root = sqrt(real(x, kind=8))
+        do i = 3, int(root), 2
+            if (mod(x, i) == 0) then
+                isMersennePrime = .false.
                 return
             end if
         end do
-    end function check_prime
 
-end program
+        isMersennePrime = .true.
+    end function isMersennePrime
 
